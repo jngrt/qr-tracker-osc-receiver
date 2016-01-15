@@ -12,6 +12,9 @@ struct Bot {
     float x;
     float y;
     float rotation;
+    string toString(){
+        return ofToString(id) + " - x:" +ofToString(x) + " y:"+ofToString(y) + " r:"+ ofToString(rotation);
+    }
 };
 
 

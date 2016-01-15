@@ -21,7 +21,8 @@ void ofApp::setup(){
 	mouseY = 0;
 	mouseButtonState = "";
 
-	ofBackground(30, 30, 130);
+	//ofBackground(190,230,240);
+    ofBackgroundHex(0xBFE6F2);
 
 }
 
@@ -52,7 +53,9 @@ void ofApp::update(){
             if( index == -1 ) {
                 bots.push_back(Bot{id,x,y,rot});
             } else {
-                bots[index] = Bot{id,x,y,rot};
+                bots[index].x = x;
+                bots[index].y = y;
+                bots[index].rotation = rot;
             }
         }
 		// check for mouse moved message
@@ -66,7 +69,8 @@ void ofApp::update(){
 			// the single argument is a string
 			mouseButtonState = m.getArgAsString(0);
 		}
-        // check for an image being sent (note: the size of the image depends greatly on your network buffer sizes - if an image is too big the message won't come through ) 
+        /*
+        // check for an image being sent (note: the size of the image depends greatly on your network buffer sizes - if an image is too big the message won't come through )
         else if(m.getAddress() == "/image" ){
             ofBuffer buffer = m.getArgAsBlob(0);
             receivedImage.load(buffer);
@@ -101,6 +105,7 @@ void ofApp::update(){
 			// clear the next line
 			msg_strings[current_msg_string] = "";
 		}
+        */
 
 	}
 }
@@ -113,10 +118,11 @@ void ofApp::draw(){
 	buf = "listening for osc messages on port" + ofToString(PORT);
 	ofDrawBitmapString(buf, 10, 20);
     
-    if(receivedImage.getWidth() > 0){
-        ofDrawBitmapString("Image:", 10, 160);
-        receivedImage.draw(10, 180);
-    }
+    //if(receivedImage.getWidth() > 0){
+    //    ofDrawBitmapString("Image:", 10, 160);
+    //    receivedImage.draw(10, 180);
+    //}
+
 
 	// draw mouse state
 	buf = "mouse: " + ofToString(mouseX, 4) +  " " + ofToString(mouseY, 4);
@@ -127,13 +133,22 @@ void ofApp::draw(){
 		ofDrawBitmapString(msg_strings[i], 10, 40 + 15 * i);
 	}
 
+    
+    ofNoFill();
     ofSetHexColor(0xff0000);
+    
+    ofDrawBitmapString("Bots detected: " + ofToString(bots.size()),430, 50);
     for(int i=0; i < bots.size(); i++){
         ofPushMatrix();
         ofTranslate(bots[i].x * ofGetWidth(),bots[i].y * ofGetHeight());
         ofRotate(ofRadToDeg(bots[i].rotation));
-        ofDrawRectangle(0,0,10,30);
+        ofDrawRectangle(-50,-50,100,100);
+        
+        ofDrawRectangle(0,-50,10,10);
         ofPopMatrix();
+
+        ofDrawBitmapString(bots[i].toString(), 430, 70 + i * 20);
+        
     }
 
 
